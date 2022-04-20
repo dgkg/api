@@ -14,6 +14,14 @@ import (
 	"github.com/dgkg/api/service"
 )
 
+type Config struct {
+	Port   string
+	DBName string
+	Env    string
+}
+
+var config Config
+
 func init() {
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
@@ -23,6 +31,10 @@ func init() {
 		panic(fmt.Errorf("Fatal error config file: %w \n", err))
 	}
 	log.Println("ENV type:", viper.GetString("ENV"))
+	log.Println("DBName:", viper.GetString("DBName"))
+	config.DBName = viper.GetString("DBName")
+	config.DBName = viper.GetString("DBName")
+	config.DBName = viper.GetString("Port")
 }
 
 const (
@@ -45,11 +57,7 @@ func main() {
 	} else {
 		conn = sqlite.New("mystorage.db")
 	}
-	s := service.New(conn)
-	r.GET("/users", s.GetAllUsers)
-	r.GET("/users/:id", s.GetUserByID)
-	r.POST("/users", s.CreateUser)
-	r.DELETE("/users/:id", s.DeleteUser)
-	r.PATCH("/users/:id", s.UpdateUser)
-	r.Run() // listen and serve on 0.0.0.0:8080
+
+	service.New(r, conn)
+	r.Run(":" + config.Port)
 }
