@@ -37,6 +37,10 @@ func (db *DB) DeleteUser(uuiUser string) error {
 	return nil
 }
 
+func (db *DB) GetAllUsers() (map[string]*model.User, error) {
+	return db.userList, nil
+}
+
 func (db *DB) GetUserByID(uuidUser string) (*model.User, error) {
 	u, ok := db.userList[uuidUser]
 	if !ok {

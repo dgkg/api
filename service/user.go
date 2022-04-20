@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,17 +10,23 @@ import (
 	"github.com/dgkg/api/model"
 )
 
-func GetUsers(c *gin.Context) {
-	users := make([]*model.User, len(db.US))
+func (s *Service) GetAllUsers(ctx *gin.Context) {
+	usdb, err := s.db.GetAllUsers()
+	if err != nil {
+		log.Println(err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	users := make([]*model.User, len(usdb))
 	var i int
-	for k := range db.US {
-		users[i] = db.US[k]
+	for k := range usdb {
+		users[i] = usdb[k]
 		i++
 	}
-	c.JSON(200, users)
+	ctx.JSON(200, users)
 }
 
-func GetUserByID(c *gin.Context) {
+func (s *Service) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 	if len(id) > 200 {
 		c.JSON(http.StatusBadRequest, nil)
@@ -33,7 +40,7 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(200, db.US[id])
 }
 
-func CreateUser(ctx *gin.Context) {
+func (s *Service) CreateUser(ctx *gin.Context) {
 	var u model.User
 	err := ctx.BindJSON(&u)
 	if err != nil {
