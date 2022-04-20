@@ -1,12 +1,33 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 
+	"github.com/dgkg/api/db"
+	"github.com/dgkg/api/db/moke"
 	"github.com/dgkg/api/db/sqlite"
 	"github.com/dgkg/api/service"
+)
+
+func init() {
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil {             // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+	}
+	log.Println("ENV type:", viper.GetString("ENV"))
+}
+
+const (
+	EnvProduction = "production"
+	EnvLocal      = "local"
 )
 
 func main() {
@@ -18,7 +39,12 @@ func main() {
 			"title": "Main website",
 		})
 	})
-	conn := sqlite.New("mystorage.db")
+	var conn db.Storage
+	if viper.GetString("ENV") == EnvLocal {
+		conn = moke.New()
+	} else {
+		conn = sqlite.New("mystorage.db")
+	}
 	s := service.New(conn)
 	r.GET("/users", s.GetAllUsers)
 	r.GET("/users/:id", s.GetUserByID)

@@ -3,9 +3,12 @@ package moke
 import (
 	"errors"
 
+	"github.com/dgkg/api/db"
 	"github.com/dgkg/api/model"
 	"github.com/google/uuid"
 )
+
+var _ db.Storage = &DB{}
 
 type DB struct {
 	userList map[string]*model.User

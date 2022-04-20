@@ -4,9 +4,12 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
+	"github.com/dgkg/api/db"
 	"github.com/dgkg/api/model"
 	"github.com/google/uuid"
 )
+
+var _ db.Storage = &DB{}
 
 type DB struct {
 	conn *gorm.DB

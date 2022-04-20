@@ -1,14 +1,14 @@
 package service
 
 import (
-	"github.com/dgkg/api/db/sqlite"
+	"github.com/dgkg/api/db"
 )
 
 type Service struct {
-	db *sqlite.DB
+	db db.Storage
 }
 
-func New(db *sqlite.DB) *Service {
+func New(db db.Storage) *Service {
 	return &Service{
 		db: db,
 	}
