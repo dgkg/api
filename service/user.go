@@ -13,7 +13,7 @@ func GetUsers(c *gin.Context) {
 	users := make([]model.User, len(db.US))
 	var i int
 	for k := range db.US {
-		users[i] = db.US[k]
+		users[i] = *db.US[k]
 		i++
 	}
 	c.JSON(200, users)
