@@ -2,7 +2,22 @@ package db
 
 import "github.com/dgkg/api/model"
 
-var US = map[string]model.User{
+type DB struct {
+	userList map[string]*model.User
+}
+
+func New() *DB {
+	return &DB{
+		userList: US,
+	}
+}
+
+// func CreateUser
+// func DeleteUser
+// func GetUserByID
+// func UpdateUser
+
+var US = map[string]*model.User{
 	"b9b8ec20-bff0-11ec-bc0f-33135681d549": {
 		ID:        "b9b8ec20-bff0-11ec-bc0f-33135681d549",
 		FirstName: "Bob",
