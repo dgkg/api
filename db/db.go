@@ -55,22 +55,21 @@ func (db *DB) UpdateUser(uuidUser string, data map[string]interface{}) (*model.U
 		return nil, errors.New("db: user don't exists")
 	}
 
-	v, ok := data["first_name"]
-	if ok {
-		u.FirstName = v.(string)
-	}
-
-	v, ok = data["last_name"]
-	if ok {
-		u.LastName = v.(string)
-	}
-
-	v, ok = data["email"]
-	if ok {
-		u.Email = v.(string)
-	}
+	updateString(&u.FirstName, "first_name", data)
+	updateString(&u.LastName, "last_name", data)
+	updateString(&u.Email, "email", data)
 
 	return u, nil
+}
+
+func updateString(field *string, key string, data map[string]interface{}) {
+	v, ok := data[key]
+	if ok {
+		value, ok := v.(string)
+		if ok {
+			*field = value
+		}
+	}
 }
 
 var US = map[string]*model.User{

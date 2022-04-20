@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/dgkg/api/db"
 	"github.com/dgkg/api/service"
 )
 
@@ -17,7 +18,12 @@ func main() {
 			"title": "Main website",
 		})
 	})
-	r.GET("/users", service.GetUsers)
-	r.GET("/users/:id", service.GetUserByID)
+	conn := db.New()
+	s := service.New(conn)
+	r.GET("/users", s.GetAllUsers)
+	r.GET("/users/:id", s.GetUserByID)
+	r.POST("/users", s.CreateUser)
+	r.DELETE("/users/:id", s.DeleteUser)
+	r.PATCH("/users/:id", s.UpdateUser)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

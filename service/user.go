@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 
-	"github.com/dgkg/api/db"
 	"github.com/dgkg/api/model"
 )
 
@@ -26,18 +26,20 @@ func (s *Service) GetAllUsers(ctx *gin.Context) {
 	ctx.JSON(200, users)
 }
 
-func (s *Service) GetUserByID(c *gin.Context) {
-	id := c.Param("id")
-	if len(id) > 200 {
-		c.JSON(http.StatusBadRequest, nil)
+func (s *Service) GetUserByID(ctx *gin.Context) {
+	id := ctx.Param("id")
+	_, err := uuid.Parse(id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	_, ok := db.US[id]
-	if !ok {
-		c.JSON(http.StatusNotFound, nil)
+
+	u, err := s.db.GetUserByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, nil)
 		return
 	}
-	c.JSON(200, db.US[id])
+	ctx.JSON(200, u)
 }
 
 func (s *Service) CreateUser(ctx *gin.Context) {
@@ -47,4 +49,49 @@ func (s *Service) CreateUser(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+	_, err = s.db.CreateUser(&u)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.JSON(200, u)
+}
+
+func (s *Service) DeleteUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	_, err := uuid.Parse(id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	err = s.db.DeleteUser(id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(200, nil)
+}
+
+func (s *Service) UpdateUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	_, err := uuid.Parse(id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	payload := make(map[string]interface{})
+	err = ctx.BindJSON(&payload)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	u, err := s.db.UpdateUser(id, payload)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.JSON(200, u)
 }
