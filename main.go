@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/dgkg/api/db"
+	"github.com/dgkg/api/db/sqlite"
 	"github.com/dgkg/api/service"
 )
 
@@ -18,7 +18,7 @@ func main() {
 			"title": "Main website",
 		})
 	})
-	conn := db.New()
+	conn := sqlite.New("mystorage.db")
 	s := service.New(conn)
 	r.GET("/users", s.GetAllUsers)
 	r.GET("/users/:id", s.GetUserByID)
