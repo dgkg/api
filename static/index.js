@@ -1,11 +1,26 @@
 // Initialize and add the map
 function initMap() {
   // The location of Uluru
-  const toulouse = { lat: 43.604652, lng: 1.444209 };
+  const toulouse = { lat: 43.6046, lng: 1.4443 };
   // The map, centered at toulouse
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: toulouse,
+  });
+  
+  const womenImg = "static/women.png";
+  new google.maps.Marker({
+    position: toulouse,
+    map: map,
+    icon: womenImg,
+  });
+
+  const toulouseM = { lat: 43.6049, lng: 1.4446 };
+  const manImg = "static/man.png";
+  new google.maps.Marker({
+    position: toulouseM,
+    map: map,
+    icon: manImg,
   });
 
   map.setOptions({ styles: styles["hide"] });
@@ -27,19 +42,21 @@ function initMap() {
 
   //NewMarker(map, toulouse);
 
-  const image = "static/taxi.png";
-  const beachMarker = new google.maps.Marker({
-    position: toulouse,
+  const toulouse1 = { lat: 43.6067, lng: 1.444 };
+
+  const taxiImg = "static/taxi.png";
+  new google.maps.Marker({
+    position: toulouse1,
     map,
-    icon: image,
+    icon: taxiImg,
   });
 
-  const toulouse2 = { lat: 43.607761, lng: 1.443210 };
+  const toulouse2 = { lat: 43.6077, lng: 1.443 };
 
   new google.maps.Marker({
     position: toulouse2,
     map,
-    icon: image,
+    icon: taxiImg,
   });
 }
 
