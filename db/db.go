@@ -17,12 +17,21 @@ func New() *DB {
 	}
 }
 
-func (db *DB) CreateUser(u *model.User) (*model.User, error) {
+func (db *DB) generateID(retry int) string {
 	id := uuid.New().String()
 	_, ok := db.userList[id]
 	if ok {
-		return nil, errors.New("db: user allready exists")
+		if retry > 0 {
+			id = db.generateID(retry - 1)
+		} else {
+			panic("not able to generate unique uuid")
+		}
 	}
+	return id
+}
+
+func (db *DB) CreateUser(u *model.User) (*model.User, error) {
+	id := db.generateID(5)
 	u.ID = id
 	db.userList[id] = u
 	return u, nil
