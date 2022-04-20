@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/LucaTheHacker/go-haversine v0.0.0-20220213075817-0d811fb84a1a
 	github.com/gin-gonic/gin v1.7.7
+	github.com/google/uuid v1.3.0
 )
 
 require (

@@ -10,10 +10,10 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	users := make([]model.User, len(db.US))
+	users := make([]*model.User, len(db.US))
 	var i int
 	for k := range db.US {
-		users[i] = *db.US[k]
+		users[i] = db.US[k]
 		i++
 	}
 	c.JSON(200, users)
@@ -31,4 +31,13 @@ func GetUserByID(c *gin.Context) {
 		return
 	}
 	c.JSON(200, db.US[id])
+}
+
+func CreateUser(ctx *gin.Context) {
+	var u model.User
+	err := ctx.BindJSON(&u)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
 }
