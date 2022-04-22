@@ -9,14 +9,16 @@ import (
 var _ db.Storage = &DB{}
 
 type DB struct {
-	userList map[string]*model.User
-	taxiList map[string]*model.Taxi
+	userList     map[string]*model.User
+	taxiList     map[string]*model.Taxi
+	locationList map[string]*model.Location
 }
 
 func New() *DB {
 	return &DB{
-		userList: us,
-		taxiList: ts,
+		userList:     us,
+		taxiList:     ts,
+		locationList: ls,
 	}
 }
 
@@ -49,6 +51,15 @@ var us = map[string]*model.User{
 }
 
 var ts = map[string]*model.Taxi{
+	"67284df4-c0bb-11ec-b8ce-cb4b09959b2": {
+		ID: "67284df4-c0bb-11ec-b8ce-cb4b09959b2",
+	},
+	"70018c56-c0bb-11ec-86a1-93ca448bf895": {
+		ID: "70018c56-c0bb-11ec-86a1-93ca448bf895",
+	},
+}
+
+var ls = map[string]*model.Location{
 	"67284df4-c0bb-11ec-b8ce-cb4b09959b2": {
 		ID: "67284df4-c0bb-11ec-b8ce-cb4b09959b2",
 	},

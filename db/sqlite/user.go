@@ -48,18 +48,3 @@ func (db *DB) UpdateUser(uuidUser string, data map[string]interface{}) (*model.U
 	}
 	return db.GetUserByID(uuidUser)
 }
-
-var us = map[string]*model.User{
-	"b9b8ec20-bff0-11ec-bc0f-33135681d549": {
-		ID:        "b9b8ec20-bff0-11ec-bc0f-33135681d549",
-		FirstName: "Bob",
-		LastName:  "Willson",
-		Email:     "b@willson.com",
-	},
-	"da7bd99a-bff0-11ec-87a9-b7bdf1760731": {
-		ID:        "da7bd99a-bff0-11ec-87a9-b7bdf1760731",
-		FirstName: "Andrea",
-		LastName:  "Guisberg",
-		Email:     "a@guisberg.co.uk",
-	},
-}
