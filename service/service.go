@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/dgkg/api/db"
+	"github.com/dgkg/api/session"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,11 +15,12 @@ func New(r *gin.Engine, db db.Storage) *Service {
 		db: db,
 	}
 	// users
-	r.GET("/users", s.GetAllUsers)
+	r.GET("/users", session.NewMiddleware(), s.GetAllUsers)
 	r.GET("/users/:id", s.GetUserByID)
 	r.POST("/users", s.CreateUser)
 	r.DELETE("/users/:id", s.DeleteUser)
 	r.PATCH("/users/:id", s.UpdateUser)
+	r.POST("/login", s.LoginUser)
 
 	// taxis
 	r.GET("/taxis", s.GetAllTaxis)

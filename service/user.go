@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/dgkg/api/model"
+	"github.com/dgkg/api/session"
 )
 
 func (s *Service) GetAllUsers(ctx *gin.Context) {
@@ -94,4 +95,35 @@ func (s *Service) UpdateUser(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(200, u)
+}
+
+func (s *Service) LoginUser(ctx *gin.Context) {
+
+	var payload model.Login
+	err := ctx.BindJSON(&payload)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	u, err := s.db.GetUserByEmail(payload.Email)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if u.Password != payload.Password {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	jwtValue, err := session.New(u.ID, u.AccessLevel)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.JSON(200, gin.H{
+		"jwt": jwtValue,
+	})
 }

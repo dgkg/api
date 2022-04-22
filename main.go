@@ -33,8 +33,8 @@ func init() {
 	log.Println("ENV type:", viper.GetString("ENV"))
 	log.Println("DBName:", viper.GetString("DBName"))
 	config.DBName = viper.GetString("DBName")
-	config.DBName = viper.GetString("DBName")
-	config.DBName = viper.GetString("Port")
+	config.Env = viper.GetString("ENV")
+	config.Port = viper.GetString("Port")
 }
 
 const (

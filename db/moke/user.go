@@ -34,6 +34,15 @@ func (db *DB) GetUserByID(uuidUser string) (*model.User, error) {
 	return u, nil
 }
 
+func (db *DB) GetUserByEmail(email string) (*model.User, error) {
+	for k := range db.userList {
+		if db.userList[k].Email == email {
+			return db.userList[k], nil
+		}
+	}
+	return nil, errors.New("db: user don't exists")
+}
+
 func (db *DB) UpdateUser(uuidUser string, data map[string]interface{}) (*model.User, error) {
 	u, ok := db.userList[uuidUser]
 	if !ok {

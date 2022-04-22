@@ -41,6 +41,15 @@ func (db *DB) GetUserByID(uuidUser string) (*model.User, error) {
 	return &u, nil
 }
 
+func (db *DB) GetUserByEmail(email string) (*model.User, error) {
+	var u model.User
+	err := db.conn.Where("email = ?", email).First(&u).Error
+	if err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
 func (db *DB) UpdateUser(uuidUser string, data map[string]interface{}) (*model.User, error) {
 	err := db.conn.Model(model.User{}).Where("id = ?", uuidUser).Updates(data).Error
 	if err != nil {
