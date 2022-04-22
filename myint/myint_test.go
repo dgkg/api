@@ -4,6 +4,9 @@ import (
 	"math"
 	"testing"
 
+	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/dgkg/api/myint"
 )
 
@@ -30,11 +33,18 @@ func TestMyIntAdd(t *testing.T) {
 }
 
 func TestMyIntSub(t *testing.T) {
+	assert := assert.New(t)
+	var a myint.MyInt = 10
+	var b int = 5
+	var c myint.MyInt = 5
 
+	assert.Equal(a.Sub(b), c, "The result should be 5.")
 }
 
 func TestMyIntMultiply(t *testing.T) {
-
+	Convey("2 multiply by 2 should equal 4", t, func() {
+		So(myint.MyInt(2).Multiply(2), ShouldEqual, 4)
+	})
 }
 
 func TestMyIntDivide(t *testing.T) {
@@ -64,4 +74,15 @@ func TestMyIntDivide(t *testing.T) {
 			t.Error("for", v.title, "got", got, "should got", v.should)
 		}
 	}
+}
+
+func TestMyIntDivide2(t *testing.T) {
+	assert := assert.New(t)
+	var a myint.MyInt = 10
+	var b int = 0
+	var waitingFor myint.MyInt = 0
+
+	res, err := a.Divide(b)
+	assert.Equal(res, waitingFor, "The result should be 0.")
+	assert.Equal(err, myint.ErrDivideByZero, "The result should be an error.")
 }
