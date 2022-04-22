@@ -53,7 +53,7 @@ func TestMyIntDivide(t *testing.T) {
 		mi := v.value
 		got, err := mi.Divide(v.param)
 		if err == nil && v.isWaitingForErr {
-			t.Error("for", v.title, "got error but should not have it. Got err", err)
+			t.Error("for", v.title, "got no error but should have :", v.err)
 		}
 
 		if err != v.err {
