@@ -21,7 +21,7 @@ func NewMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.Parse(valAuth[6:], func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(valAuth[7:], func(token *jwt.Token) (interface{}, error) {
 			// Don't forget to validate the alg is what you expect:
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -40,6 +40,7 @@ func NewMiddleware() gin.HandlerFunc {
 			ctx.AbortWithStatus(http.StatusForbidden)
 			return
 		}
-		fmt.Println("jwt accepted", val)
+		// set the claims into the context.
+		ctx.Set("claims", val)
 	}
 }
