@@ -9,14 +9,10 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func NewMiddleware() gin.HandlerFunc {
+func NewMiddleware(accessLvlMin int) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		valAuth := ctx.GetHeader("Authorization")
-		if len(valAuth) == 0 {
-			ctx.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-		if !strings.Contains(valAuth, "Bearer ") {
+		if len(valAuth) == 0 || !strings.Contains(valAuth, "Bearer ") {
 			ctx.AbortWithStatus(http.StatusForbidden)
 			return
 		}
@@ -24,7 +20,7 @@ func NewMiddleware() gin.HandlerFunc {
 		token, err := jwt.Parse(valAuth[7:], func(token *jwt.Token) (interface{}, error) {
 			// Don't forget to validate the alg is what you expect:
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+				return nil, fmt.Errorf("session: unexpected signing method: %w", token.Header["alg"].(error))
 			}
 
 			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
@@ -35,9 +31,14 @@ func NewMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		val, ok := token.Claims.(jwt.MapClaims)
+		val, ok := token.Claims.(CustomClaimsUser)
 		if !ok {
 			ctx.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		if val.AccessLevel < accessLvlMin {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 		// set the claims into the context.

@@ -15,7 +15,7 @@ func New(r *gin.Engine, db db.Storage) *Service {
 		db: db,
 	}
 	// users
-	r.GET("/users", session.NewMiddleware(), s.GetAllUsers)
+	r.GET("/users", session.NewMiddleware(1), s.GetAllUsers)
 	r.GET("/users/:id", s.GetUserByID)
 	r.POST("/users", s.CreateUser)
 	r.DELETE("/users/:id", s.DeleteUser)

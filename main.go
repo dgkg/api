@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +26,8 @@ func init() {
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+		panic("main: fatal error config file:" + err.Error())
 	}
-	log.Println("ENV type:", viper.GetString("ENV"))
-	log.Println("DBName:", viper.GetString("DBName"))
 	config.DBName = viper.GetString("DBName")
 	config.Env = viper.GetString("ENV")
 	config.Port = viper.GetString("Port")
@@ -52,7 +48,7 @@ func main() {
 		})
 	})
 	var conn db.Storage
-	if viper.GetString("ENV") == EnvLocal {
+	if config.Env == EnvLocal {
 		conn = moke.New()
 	} else {
 		conn = sqlite.New("mystorage.db")
